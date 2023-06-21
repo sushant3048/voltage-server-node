@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Random Number Generator</title>
+</head>
+
+<body>
+    <h1>Random Number: <span id="randomNumber"></span></h1>
+
+    <form id="numberForm">
+        <label for="numberInput">Enter a number:</label>
+        <input type="text" id="numberInput" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        // Handle WebSocket messages
+        socket.onmessage = event => {
+            const number = event.data;
+            document.getElementById('randomNumber').textContent = number;
+        };
+
+        // Handle form submission
+        document.getElementById('numberForm').addEventListener('submit', event => {
+            event.preventDefault();
+            const numberInput = document.getElementById('numberInput');
+            const number = numberInput.value.trim();
+            if (number !== '') {
+                socket.send(number);
+                numberInput.value = '';
+            }
+        });
+    </script>
+</body>
+
+</html>
